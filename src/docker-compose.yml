@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  catalogdb:
+    image: postgres:15
+    # IMPORTANT: Ensure there is NO 'build' section here.
+
+volumes:
+  # This declares the volume so the override file can use it
+  postgres_catalog:
