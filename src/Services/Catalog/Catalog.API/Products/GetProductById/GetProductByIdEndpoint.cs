@@ -1,7 +1,6 @@
 ﻿namespace Catalog.API.Products.GetProductById;
 
-public record GetProductByIdRequest(Guid id);
-public record GetProductByIdResponse(Product product);
+public record GetProductByIdResponse(Product Product);
 
 public class GetProductByIdEndpoint: ICarterModule
 {
