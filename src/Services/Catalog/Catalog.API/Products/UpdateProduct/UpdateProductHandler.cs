@@ -3,6 +3,19 @@
 public record UpdateProductCommand(Guid Id, string Name, List<string> Category, string Description, string ImageFile, decimal Price) : ICommand<UpdateProductResult>;
 public record UpdateProductResult(bool IsSuccess);
 
+public class UpdateProductCommandHandler: AbstractValidator<UpdateProductCommand>
+{
+    public UpdateProductCommandHandler()
+    {
+        RuleFor(x => x.Id).NotEmpty().WithMessage("Product ID is required");
+        RuleFor(x => x.Name)
+            .NotEmpty().WithMessage("Name is required")
+            .Length(2, 150).WithMessage("Name must be between 2 and 150 characters");
+
+        RuleFor(x => x.Price).GreaterThan(0).WithMessage("Price must be greater than 0");
+    }
+}
+
 internal class UpdateProductHandler(IDocumentSession session) : 
     ICommandHandler<UpdateProductCommand, UpdateProductResult>
 {
