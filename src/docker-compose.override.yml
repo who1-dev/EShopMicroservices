@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  pgadmin:
+    container_name: pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    restart: always
+    ports:
+      - "80:80"
   catalogdb:
     container_name: catalogdb
     environment:

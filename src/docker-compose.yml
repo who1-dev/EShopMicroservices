@@ -1,6 +1,8 @@
 version: '3.8'
 
 services:
+  pgadmin:
+    image: dpage/pgadmin4
   catalogdb:
     image: postgres:15
     # IMPORTANT: Ensure there is NO 'build' section here.
