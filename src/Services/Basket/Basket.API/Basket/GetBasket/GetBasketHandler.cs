@@ -1,5 +1,4 @@
-﻿
-namespace Basket.API.Baskets.GetBasket;
+﻿namespace Basket.API.Baskets.GetBasket;
 
 public record GetBasketQuery(string UserName) : IQuery<GetBasketResult>;
 public record GetBasketResult(ShoppingCart Cart);
