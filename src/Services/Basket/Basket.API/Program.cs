@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var assembly = typeof(Program).Assembly;
-
 // Add services to the container
+var assembly = typeof(Program).Assembly;
+builder.Services.AddCarter();
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(assembly);
@@ -15,13 +15,16 @@ builder.Services.AddMediatR(config =>
 
 builder.Services.AddValidatorsFromAssembly(assembly);
 
-builder.Services.AddCarter();
+
 
 builder.Services.AddMarten();
-//builder.Services.AddMarten(opts =>
-//{
-//    opts.Connection(builder.Configuration.GetConnectionString("Database")!);
-//}).UseLightweightSessions();
+builder.Services.AddMarten(opts =>
+{
+    opts.Connection(builder.Configuration.GetConnectionString("Database")!);
+    opts.Schema.For<ShoppingCart>().Identity(x => x.UserName);
+}).UseLightweightSessions();
+
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 
 //if (builder.Environment.IsDevelopment())
 //    builder.Services.InitializeMartenWith<CatalogInitialData>();

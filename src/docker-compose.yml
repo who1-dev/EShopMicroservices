@@ -5,13 +5,22 @@ services:
     image: dpage/pgadmin4
   catalogdb:
     image: postgres:15
+  basketdb:
+    image: postgres:15
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalogapi
     build:
         context: .
         dockerfile: Services/Catalog/Catalog.API/Dockerfile
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basketapi
+    build:
+        context: .
+        dockerfile: Services/Basket/Basket.API/Dockerfile
     # IMPORTANT: Ensure there is NO 'build' section here.
 
 volumes:
   # This declares the volume so the override file can use it
   postgres_catalog:
+  postgres_basket:
+    
