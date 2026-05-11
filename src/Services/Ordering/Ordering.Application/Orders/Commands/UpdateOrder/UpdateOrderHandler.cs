@@ -1,7 +1,7 @@
 ﻿
 namespace Ordering.Application.Orders.Commands.UpdateOrder;
 
-public class UpdateOrderHandler(IApplicationContext dbContext) :
+public class UpdateOrderHandler(IApplicationDbContext dbContext) :
     ICommandHandler<UpdateOrderCommand, UpdateOrderResult>
 {
     public async Task<UpdateOrderResult> Handle(UpdateOrderCommand command, CancellationToken cancellationToken)

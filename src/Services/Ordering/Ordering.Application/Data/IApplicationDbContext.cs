@@ -3,7 +3,7 @@ using Ordering.Domain.Models;
 
 namespace Ordering.Application.Data;
 
-public interface IApplicationContext
+public interface IApplicationDbContext
 {
     DbSet<Customer> Customers { get; }
     DbSet<Product> Products { get; }

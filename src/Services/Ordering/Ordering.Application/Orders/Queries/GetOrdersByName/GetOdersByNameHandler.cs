@@ -1,7 +1,7 @@
 ﻿
 namespace Ordering.Application.Orders.Queries.GetOrdersByName;
 
-public class GetOdersByNameHandler(IApplicationContext dbContext)
+public class GetOdersByNameHandler(IApplicationDbContext dbContext)
     : IQueryHandler<GetOrdersByNameQuery, GetOrdersByNameResult>
 {
     public async Task<GetOrdersByNameResult> Handle(GetOrdersByNameQuery query, CancellationToken cancellationToken)

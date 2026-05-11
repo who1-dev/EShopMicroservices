@@ -1,7 +1,7 @@
 ﻿
 namespace Ordering.Application.Orders.Commands.CreateOrder;
 
-internal class CreateOrderHandler(IApplicationContext dbContext)
+internal class CreateOrderHandler(IApplicationDbContext dbContext)
     : ICommandHandler<CreateOrderCommand, CreateOrderResult>
 {
     public async Task<CreateOrderResult> Handle(CreateOrderCommand command, CancellationToken cancellationToken)

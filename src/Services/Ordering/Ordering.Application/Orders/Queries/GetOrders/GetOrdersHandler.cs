@@ -2,7 +2,7 @@
 
 namespace Ordering.Application.Orders.Queries.GetOrders;
 
-public class GetOrdersHandler(IApplicationContext dbContext)
+public class GetOrdersHandler(IApplicationDbContext dbContext)
     : IQueryHandler<GetOrdersQuery, GetOrdersResult>
 {
     public async Task<GetOrdersResult> Handle(GetOrdersQuery query, CancellationToken cancellationToken)
