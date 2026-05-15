@@ -6,7 +6,7 @@ internal class InitialData
     {
         Customer.Create(CustomerId.Of(new Guid("58c49479-ec65-4de2-86e7-033c546291aa")), "charmander", "charmander00000@gmail.com"),
         Customer.Create(CustomerId.Of(new Guid("189dc8dc-990f-48e0-a37b-e6f2b60b9d7d")), "bulbasaur", "bulbasaur00000@gmail.com"),
-         Customer.Create(CustomerId.Of(new Guid("189dc8dc-990f-48e0-a37b-e6f2b60b9d7d")), "squirtle", "squirtle00000@gmail.com")
+        Customer.Create(CustomerId.Of(new Guid("7c9e6679-7425-40de-944b-e07fc1f90ae7")), "squirtle", "squirtle00000@gmail.com")
     };
 
     public static IEnumerable<Product> Products =>

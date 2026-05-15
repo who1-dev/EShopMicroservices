@@ -12,7 +12,7 @@ public class UpdateOrder : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/orders/{orderId}", async (UpdateRecordRequest request, ISender sender) =>
+        app.MapPut("/orders/{orderId}", async (UpdateRecordRequest request, ISender sender) =>
         {
 
             var command = request.Adapt<UpdateOrderCommand>();

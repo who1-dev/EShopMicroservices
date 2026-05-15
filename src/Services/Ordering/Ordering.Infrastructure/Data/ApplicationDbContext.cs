@@ -2,7 +2,6 @@
 using System.Reflection;
 
 namespace Ordering.Infrastructure.Data;
-
 public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -18,5 +17,4 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(builder);
     }
-
 }

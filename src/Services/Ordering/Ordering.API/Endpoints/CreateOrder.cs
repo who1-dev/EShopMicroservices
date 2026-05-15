@@ -11,7 +11,7 @@ public class CreateOrder : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/orders/create", async (CreateOrderRequest request, ISender sender) =>
+        app.MapPost("/orders", async (CreateOrderRequest request, ISender sender) =>
         {
             var command = request.Adapt<CreateOrderCommand>();
 
