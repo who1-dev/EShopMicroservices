@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "e-commerce-shop": {
+    "storefront": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -61,10 +61,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "e-commerce-shop:build:production"
+              "buildTarget": "storefront:build:production"
             },
             "development": {
-              "buildTarget": "e-commerce-shop:build:development"
+              "buildTarget": "storefront:build:development"
             }
           },
           "defaultConfiguration": "development"
