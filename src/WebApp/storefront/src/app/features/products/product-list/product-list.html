@@ -1,0 +1,78 @@
+<section class="products">
+  <header class="products__header">
+    <h1>Shop</h1>
+    <p>
+      {{ filteredProducts().length }} products
+      @if (q()) {
+        matching “{{ q() }}”
+      }
+    </p>
+  </header>
+
+  @if (categories().length) {
+    <nav class="filters" aria-label="Filter by category">
+      <button
+        type="button"
+        class="chip"
+        [class.chip--active]="selectedCategory() === null"
+        (click)="selectCategory(null)"
+      >
+        All
+      </button>
+      @for (category of categories(); track category) {
+        <button
+          type="button"
+          class="chip"
+          [class.chip--active]="selectedCategory() === category"
+          (click)="selectCategory(category)"
+        >
+          {{ category }}
+        </button>
+      }
+    </nav>
+  }
+
+  @if (resource.isLoading()) {
+    <p class="status">Loading products…</p>
+  } @else if (resource.error()) {
+    <div class="status">
+      <button type="button" class="chip" (click)="resource.reload()">Try again</button>
+    </div>
+  } @else {
+    <ul class="grid">
+      @for (product of filteredProducts(); track product.id) {
+        <li class="card">
+          <div class="card__media">
+            @if (brokenImages().has(product.id)) {
+              <span class="card__placeholder">{{ product.name.charAt(0) }}</span>
+            } @else {
+              <img
+                [src]="'images/' + product.imageFile"
+                [alt]="product.name"
+                loading="lazy"
+                (error)="onImageError(product.id)"
+              />
+            }
+          </div>
+          <div class="card__body">
+            <div class="card__tags">
+              @for (category of product.category; track category) {
+                <span class="tag">{{ category }}</span>
+              }
+            </div>
+            <h2 class="card__title">{{ product.name }}</h2>
+            <p class="card__description">{{ product.description }}</p>
+            <div class="card__footer">
+              <span class="card__price">{{ product.price | currency: 'USD' }}</span>
+              <button type="button" class="card__button" (click)="addToCart(product)">
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </li>
+      } @empty {
+        <li class="status">No products found.</li>
+      }
+    </ul>
+  }
+</section>

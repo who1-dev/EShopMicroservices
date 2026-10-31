@@ -1,0 +1,71 @@
+:host {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--banner-border);
+  border-radius: 0.5rem;
+  background: var(--banner-bg);
+  color: var(--banner-text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+:host(.banner--success) {
+  --banner-bg: oklch(96% 0.04 150);
+  --banner-border: oklch(80% 0.1 150);
+  --banner-text: oklch(35% 0.1 150);
+  --banner-accent: oklch(55% 0.15 150);
+}
+
+:host(.banner--error) {
+  --banner-bg: oklch(96% 0.03 25);
+  --banner-border: oklch(82% 0.09 25);
+  --banner-text: oklch(40% 0.15 25);
+  --banner-accent: oklch(57% 0.2 25);
+}
+
+.banner {
+  &__icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--banner-accent);
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__message {
+    margin: 0;
+    line-height: 1.5rem;
+  }
+
+  &__details {
+    margin: 0.25rem 0 0;
+    padding-left: 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  &__close {
+    flex-shrink: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+    cursor: pointer;
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
