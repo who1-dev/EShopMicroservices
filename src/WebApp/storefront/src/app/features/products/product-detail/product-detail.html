@@ -1,0 +1,119 @@
+<section class="detail container">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <ol>
+      <li><a routerLink="/products">Shop</a></li>
+      @if (product(); as p) {
+        <li aria-current="page">{{ p.name }}</li>
+      }
+    </ol>
+  </nav>
+
+  @if (resource.isLoading()) {
+    <div class="detail__layout" aria-busy="true" aria-label="Loading product">
+      <div class="media-tile detail__media skeleton"></div>
+      <div class="detail__info" aria-hidden="true">
+        <div class="skeleton skeleton--line detail__skeleton-short"></div>
+        <div class="skeleton detail__skeleton-title"></div>
+        <div class="skeleton skeleton--line detail__skeleton-short"></div>
+        <div class="skeleton skeleton--line"></div>
+        <div class="skeleton skeleton--line"></div>
+        <div class="skeleton detail__skeleton-button"></div>
+      </div>
+    </div>
+  } @else if (notFound()) {
+    <div class="status">
+      <p class="eyebrow">404</p>
+      <h1>Product not found</h1>
+      <p>The product you're looking for doesn't exist or was removed.</p>
+      <a class="btn" routerLink="/products">Browse the collection</a>
+    </div>
+  } @else if (resource.error()) {
+    <div class="status">
+      <h1>We couldn't load this product</h1>
+      <p>Please check your connection and try again.</p>
+      <button type="button" class="btn" (click)="resource.reload()">Try again</button>
+    </div>
+  } @else if (product(); as p) {
+    <article class="detail__layout">
+      <div class="media-tile detail__media">
+        @if (imageBroken()) {
+          <span class="media-tile__placeholder detail__placeholder">{{ p.name.charAt(0) }}</span>
+        } @else {
+          <img [src]="p.imageFile | productImage" [alt]="p.name" (error)="imageBroken.set(true)" />
+        }
+      </div>
+
+      <div class="detail__info">
+        <header class="detail__header">
+          <p class="eyebrow">{{ p.category.join(' · ') }}</p>
+          <h1 class="detail__title">{{ p.name }}</h1>
+          <p class="detail__price">{{ p.price | currency: 'USD' }}</p>
+        </header>
+
+        <p class="detail__description">{{ p.description }}</p>
+
+        <div class="detail__options">
+          <fieldset class="option">
+            <legend class="eyebrow option__label">
+              Color <strong>{{ color() }}</strong>
+            </legend>
+            <div class="swatches">
+              @for (c of colors; track c) {
+                <label class="swatch" [class.swatch--active]="color() === c">
+                  <input
+                    type="radio"
+                    name="color"
+                    [value]="c"
+                    [checked]="color() === c"
+                    (change)="color.set(c)"
+                  />
+                  <span class="swatch__sample" [class.swatch__sample--white]="c === 'White'"></span>
+                  {{ c }}
+                </label>
+              }
+            </div>
+          </fieldset>
+
+          <div class="option">
+            <label class="eyebrow option__label" for="quantity">Quantity</label>
+            <div class="stepper">
+              <button
+                type="button"
+                aria-label="Decrease quantity"
+                [disabled]="quantity() <= 1"
+                (click)="changeQuantity(-1)"
+              >
+                −
+              </button>
+              <input
+                id="quantity"
+                type="number"
+                inputmode="numeric"
+                min="1"
+                [max]="maxQuantity"
+                [value]="quantity()"
+                (change)="onQuantityChange($event)"
+              />
+              <button
+                type="button"
+                aria-label="Increase quantity"
+                [disabled]="quantity() >= maxQuantity"
+                (click)="changeQuantity(1)"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn--primary btn--block btn--lg detail__button"
+          (click)="addToCart(p)"
+        >
+          Add to cart — {{ p.price * quantity() | currency: 'USD' }}
+        </button>
+      </div>
+    </article>
+  }
+</section>

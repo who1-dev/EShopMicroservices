@@ -1,20 +1,28 @@
-<section class="products">
+<section class="products container">
   <header class="products__header">
-    <h1>Shop</h1>
-    <p>
-      {{ filteredProducts().length }} products
+    <p class="eyebrow">The collection</p>
+    <h1 class="products__title">
       @if (q()) {
-        matching “{{ q() }}”
+        Results for “{{ q() }}”
+      } @else {
+        Shop all
       }
-    </p>
+    </h1>
+    @if (!resource.isLoading() && !resource.error()) {
+      <p class="products__count">
+        {{ filteredProducts().length }}
+        {{ filteredProducts().length === 1 ? 'product' : 'products' }}
+      </p>
+    }
   </header>
 
   @if (categories().length) {
     <nav class="filters" aria-label="Filter by category">
       <button
         type="button"
-        class="chip"
-        [class.chip--active]="selectedCategory() === null"
+        class="filters__item"
+        [class.filters__item--active]="selectedCategory() === null"
+        [attr.aria-pressed]="selectedCategory() === null"
         (click)="selectCategory(null)"
       >
         All
@@ -22,8 +30,9 @@
       @for (category of categories(); track category) {
         <button
           type="button"
-          class="chip"
-          [class.chip--active]="selectedCategory() === category"
+          class="filters__item"
+          [class.filters__item--active]="selectedCategory() === category"
+          [attr.aria-pressed]="selectedCategory() === category"
           (click)="selectCategory(category)"
         >
           {{ category }}
@@ -33,45 +42,63 @@
   }
 
   @if (resource.isLoading()) {
-    <p class="status">Loading products…</p>
+    <ul class="grid" aria-busy="true" aria-label="Loading products">
+      @for (i of skeletons; track i) {
+        <li class="card" aria-hidden="true">
+          <div class="media-tile card__media skeleton"></div>
+          <div class="card__body">
+            <div class="skeleton skeleton--line card__skeleton-short"></div>
+            <div class="skeleton skeleton--line card__skeleton-title"></div>
+            <div class="skeleton skeleton--line"></div>
+          </div>
+        </li>
+      }
+    </ul>
   } @else if (resource.error()) {
     <div class="status">
-      <button type="button" class="chip" (click)="resource.reload()">Try again</button>
+      <h2>We couldn't load the collection</h2>
+      <p>Please check your connection and try again.</p>
+      <button type="button" class="btn" (click)="resource.reload()">Try again</button>
     </div>
   } @else {
     <ul class="grid">
       @for (product of filteredProducts(); track product.id) {
         <li class="card">
-          <div class="card__media">
+          <a
+            class="media-tile card__media"
+            [routerLink]="['/products', product.id]"
+            tabindex="-1"
+            aria-hidden="true"
+          >
             @if (brokenImages().has(product.id)) {
-              <span class="card__placeholder">{{ product.name.charAt(0) }}</span>
+              <span class="media-tile__placeholder">{{ product.name.charAt(0) }}</span>
             } @else {
               <img
-                [src]="'images/' + product.imageFile"
+                [src]="product.imageFile | productImage"
                 [alt]="product.name"
                 loading="lazy"
                 (error)="onImageError(product.id)"
               />
             }
-          </div>
+          </a>
           <div class="card__body">
-            <div class="card__tags">
-              @for (category of product.category; track category) {
-                <span class="tag">{{ category }}</span>
-              }
-            </div>
-            <h2 class="card__title">{{ product.name }}</h2>
+            <p class="eyebrow card__category">{{ product.category.join(' · ') }}</p>
+            <h2 class="card__title">
+              <a [routerLink]="['/products', product.id]">{{ product.name }}</a>
+            </h2>
             <p class="card__description">{{ product.description }}</p>
-            <div class="card__footer">
-              <span class="card__price">{{ product.price | currency: 'USD' }}</span>
-              <button type="button" class="card__button" (click)="addToCart(product)">
-                Add to cart
-              </button>
-            </div>
+            <p class="card__price">{{ product.price | currency: 'USD' }}</p>
+            <a class="btn btn--block card__button" [routerLink]="['/products', product.id]">
+              View product
+            </a>
           </div>
         </li>
       } @empty {
-        <li class="status">No products found.</li>
+        <li class="status grid__empty">
+          <h2>Nothing found</h2>
+          <p>Try a different search term or browse all categories.</p>
+          <a class="btn" routerLink="/products" (click)="selectCategory(null)">Clear filters</a>
+        </li>
       }
     </ul>
   }

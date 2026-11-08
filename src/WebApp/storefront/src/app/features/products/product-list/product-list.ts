@@ -1,21 +1,20 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ApiError } from '../../../core/http/api-error';
 import { BannerService } from '../../../shared/banner/banner.service';
-import { CartService } from '../../cart/cart.service';
-import { Product } from '../product.model';
 import { ProductsService } from '../products.service';
+import { ProductImagePipe } from '../product-image.pipe';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, ProductImagePipe, RouterLink],
   templateUrl: './product-list.html',
   styleUrl: './product-list.scss',
 })
 export class ProductList {
   private readonly productsService = inject(ProductsService);
-  private readonly banners = inject(BannerService);
-  private readonly cart = inject(CartService);
+  private readonly bannerService = inject(BannerService);
   private errorBannerId: number | null = null;
 
   // Search term from the ?q= query param, bound via withComponentInputBinding().
@@ -24,6 +23,8 @@ export class ProductList {
   protected readonly resource = this.productsService.products;
   protected readonly selectedCategory = signal<string | null>(null);
   protected readonly brokenImages = signal(new Set<string>());
+  // Number of placeholder cards shown while products load.
+  protected readonly skeletons = Array.from({ length: 8 }, (_, i) => i);
 
   // value() throws while the resource is in an error state, even with a defaultValue.
   protected readonly products = computed(() =>
@@ -49,11 +50,11 @@ export class ProductList {
     effect(() => {
       const error = this.resource.error();
       if (this.errorBannerId !== null) {
-        this.banners.dismiss(this.errorBannerId);
+        this.bannerService.dismiss(this.errorBannerId);
         this.errorBannerId = null;
       }
       if (error) {
-        this.errorBannerId = this.banners.error(
+        this.errorBannerId = this.bannerService.error(
           error instanceof ApiError ? error : `Could not load products. ${error.message}`,
         );
       }
@@ -62,11 +63,6 @@ export class ProductList {
 
   protected selectCategory(category: string | null): void {
     this.selectedCategory.set(category);
-  }
-
-  protected addToCart(product: Product): void {
-    this.cart.add(product);
-    this.banners.success(`${product.name} added to cart.`);
   }
 
   protected onImageError(id: string): void {

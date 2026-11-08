@@ -7,6 +7,10 @@ export interface Product {
   price: number;
 }
 
+// Colors offered on the product detail page. The catalog API has no color field yet.
+export type ProductColor = 'Black' | 'White';
+export const PRODUCT_COLORS: readonly ProductColor[] = ['Black', 'White'];
+
 export interface GetProductsResponse {
   products: Product[];
 }
