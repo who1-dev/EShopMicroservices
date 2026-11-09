@@ -1,0 +1,18 @@
+<span class="banner__icon" aria-hidden="true">{{ type() === 'error' ? '!' : '✓' }}</span>
+
+<div class="banner__content">
+  <p class="banner__message">{{ message() }}</p>
+  @if (details().length) {
+    <ul class="banner__details">
+      @for (detail of details(); track $index) {
+        <li>{{ detail }}</li>
+      }
+    </ul>
+  }
+</div>
+
+@if (dismissible()) {
+  <button type="button" class="banner__close" aria-label="Dismiss" (click)="dismissed.emit()">
+    ×
+  </button>
+}

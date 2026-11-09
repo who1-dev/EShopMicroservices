@@ -1,0 +1,7 @@
+{
+  "/catalog-service": {
+    "target": "http://localhost:6004",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

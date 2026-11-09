@@ -1,0 +1,246 @@
+// Global design system: tokens, base element styles and shared UI primitives.
+// Component stylesheets use these tokens instead of defining their own colors.
+
+:root {
+  // Typography
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  // Color: warm ivory and ink, with a single muted gold highlight.
+  --bg: oklch(98.6% 0.004 85);
+  --surface: oklch(95.8% 0.007 85);
+  --surface-strong: oklch(93% 0.008 85);
+  --text: oklch(19% 0.006 85);
+  --text-soft: oklch(32% 0.008 85);
+  --muted: oklch(50% 0.01 85);
+  --border: oklch(89% 0.008 85);
+  --gold: oklch(68% 0.085 78);
+  --focus: oklch(55% 0.13 250);
+
+  // Shape, depth and motion
+  --radius-sm: 4px;
+  --radius: 10px;
+  --shadow-soft: 0 18px 40px -20px oklch(25% 0.02 85 / 0.25);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  // Layout
+  --container: 1280px;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --nav-height: 4.5rem;
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: oklch(90% 0.05 78);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ---- Layout -----------------------------------------------------------------
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+// Small uppercase label used above headings and for categories.
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+// ---- Buttons ----------------------------------------------------------------
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0 1.5rem;
+  border: 1px solid var(--text);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease),
+    border-color 0.25s var(--ease);
+
+  &:hover {
+    background: var(--text);
+    color: var(--bg);
+  }
+
+  &--primary {
+    background: var(--text);
+    color: var(--bg);
+
+    &:hover {
+      background: var(--text-soft);
+      border-color: var(--text-soft);
+    }
+  }
+
+  &--block {
+    width: 100%;
+  }
+
+  &--lg {
+    min-height: 3.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+// ---- Media ------------------------------------------------------------------
+
+// Neutral tile that frames a product image. Pages set their own aspect ratio and image size.
+.media-tile {
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+
+  img {
+    object-fit: contain;
+  }
+
+  // Initial letter shown when the image fails to load.
+  &__placeholder {
+    font-family: var(--font-display);
+    font-size: 4rem;
+    line-height: 1;
+    color: var(--border);
+  }
+}
+
+// ---- Feedback states ---------------------------------------------------------
+
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 5rem 1rem;
+  text-align: center;
+  color: var(--muted);
+
+  h1,
+  h2 {
+    color: var(--text);
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+  }
+
+  p {
+    max-width: 36ch;
+  }
+}
+
+// Shimmering placeholder shown while content loads.
+.skeleton {
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    var(--surface-strong) 37%,
+    var(--surface) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+
+  &--line {
+    height: 0.85rem;
+  }
+}
+
+// A loading image tile keeps the tile's larger corner radius.
+.media-tile.skeleton {
+  border-radius: var(--radius);
+}
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 50%;
+  }
+  to {
+    background-position: 0 50%;
+  }
+}

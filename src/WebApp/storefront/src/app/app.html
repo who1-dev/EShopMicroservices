@@ -1,0 +1,16 @@
+<app-navbar />
+
+@if (bannerService.banners().length) {
+  <div class="banners">
+    @for (banner of bannerService.banners(); track banner.id) {
+      <app-banner
+        [type]="banner.type"
+        [message]="banner.message"
+        [details]="banner.details"
+        (dismissed)="bannerService.dismiss(banner.id)"
+      />
+    }
+  </div>
+}
+
+<router-outlet />

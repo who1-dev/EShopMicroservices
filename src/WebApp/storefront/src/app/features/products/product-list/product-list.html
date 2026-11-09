@@ -1,0 +1,105 @@
+<section class="products container">
+  <header class="products__header">
+    <p class="eyebrow">The collection</p>
+    <h1 class="products__title">
+      @if (q()) {
+        Results for “{{ q() }}”
+      } @else {
+        Shop all
+      }
+    </h1>
+    @if (!resource.isLoading() && !resource.error()) {
+      <p class="products__count">
+        {{ filteredProducts().length }}
+        {{ filteredProducts().length === 1 ? 'product' : 'products' }}
+      </p>
+    }
+  </header>
+
+  @if (categories().length) {
+    <nav class="filters" aria-label="Filter by category">
+      <button
+        type="button"
+        class="filters__item"
+        [class.filters__item--active]="selectedCategory() === null"
+        [attr.aria-pressed]="selectedCategory() === null"
+        (click)="selectCategory(null)"
+      >
+        All
+      </button>
+      @for (category of categories(); track category) {
+        <button
+          type="button"
+          class="filters__item"
+          [class.filters__item--active]="selectedCategory() === category"
+          [attr.aria-pressed]="selectedCategory() === category"
+          (click)="selectCategory(category)"
+        >
+          {{ category }}
+        </button>
+      }
+    </nav>
+  }
+
+  @if (resource.isLoading()) {
+    <ul class="grid" aria-busy="true" aria-label="Loading products">
+      @for (i of skeletons; track i) {
+        <li class="card" aria-hidden="true">
+          <div class="media-tile card__media skeleton"></div>
+          <div class="card__body">
+            <div class="skeleton skeleton--line card__skeleton-short"></div>
+            <div class="skeleton skeleton--line card__skeleton-title"></div>
+            <div class="skeleton skeleton--line"></div>
+          </div>
+        </li>
+      }
+    </ul>
+  } @else if (resource.error()) {
+    <div class="status">
+      <h2>We couldn't load the collection</h2>
+      <p>Please check your connection and try again.</p>
+      <button type="button" class="btn" (click)="resource.reload()">Try again</button>
+    </div>
+  } @else {
+    <ul class="grid">
+      @for (product of filteredProducts(); track product.id) {
+        <li class="card">
+          <a
+            class="media-tile card__media"
+            [routerLink]="['/products', product.id]"
+            tabindex="-1"
+            aria-hidden="true"
+          >
+            @if (brokenImages().has(product.id)) {
+              <span class="media-tile__placeholder">{{ product.name.charAt(0) }}</span>
+            } @else {
+              <img
+                [src]="product.imageFile | productImage"
+                [alt]="product.name"
+                loading="lazy"
+                (error)="onImageError(product.id)"
+              />
+            }
+          </a>
+          <div class="card__body">
+            <p class="eyebrow card__category">{{ product.category.join(' · ') }}</p>
+            <h2 class="card__title">
+              <a [routerLink]="['/products', product.id]">{{ product.name }}</a>
+            </h2>
+            <p class="card__description">{{ product.description }}</p>
+            <p class="card__price">{{ product.price | currency: 'USD' }}</p>
+            <a class="btn btn--block card__button" [routerLink]="['/products', product.id]">
+              View product
+            </a>
+          </div>
+        </li>
+      } @empty {
+        <li class="status grid__empty">
+          <h2>Nothing found</h2>
+          <p>Try a different search term or browse all categories.</p>
+          <a class="btn" routerLink="/products" (click)="selectCategory(null)">Clear filters</a>
+        </li>
+      }
+    </ul>
+  }
+</section>

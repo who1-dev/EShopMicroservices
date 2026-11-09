@@ -1,0 +1,185 @@
+:host {
+  display: block;
+}
+
+.products {
+  padding-block: clamp(2.5rem, 6vw, 4.5rem) 5rem;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+    text-align: center;
+  }
+
+  &__title {
+    font-size: clamp(2.5rem, 6vw, 4.25rem);
+  }
+
+  &__count {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+}
+
+// Category filters as understated text tabs; scroll sideways on small screens.
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem 2rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &__item {
+    flex-shrink: 0;
+    position: relative;
+    padding: 0.5rem 0;
+    border: none;
+    background: none;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.2s var(--ease);
+
+    // Underline for the active tab, drawn just inside the button.
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: var(--text);
+      transform: scaleX(0);
+      transition: transform 0.3s var(--ease);
+    }
+
+    &:hover {
+      color: var(--text);
+    }
+
+    &--active {
+      color: var(--text);
+
+      &::after {
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  @media (max-width: 640px) {
+    justify-content: flex-start;
+  }
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 3rem 1.75rem;
+
+  &__empty {
+    grid-column: 1 / -1;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+
+  // Base tile styles come from the global .media-tile class.
+  &__media {
+    aspect-ratio: 4 / 5;
+
+    // Full-width single column on phones: a square tile keeps more of the card on screen.
+    @media (max-width: 640px) {
+      aspect-ratio: 1;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      padding: 12%;
+      transition: transform 0.6s var(--ease);
+    }
+  }
+
+  &:hover &__media img {
+    transform: scale(1.05);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.45rem;
+  }
+
+  &__category {
+    font-size: 0.65rem;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+
+    // Underline that draws in on hover.
+    a {
+      text-decoration: none;
+      background-image: linear-gradient(currentColor, currentColor);
+      background-size: 0 1px;
+      background-position: 0 100%;
+      background-repeat: no-repeat;
+      transition: background-size 0.3s var(--ease);
+
+      &:hover {
+        background-size: 100% 1px;
+      }
+    }
+  }
+
+  &__description {
+    flex: 1;
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__price {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  &__button {
+    margin-top: 0.5rem;
+  }
+
+  // Loading placeholders
+  &__skeleton-short {
+    width: 35%;
+  }
+
+  &__skeleton-title {
+    width: 70%;
+    height: 1.4rem;
+  }
+}
