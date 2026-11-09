@@ -38,10 +38,12 @@ services:
     build:
       context: .
       dockerfile: ApiGateways/YarpApiGateway/Dockerfile
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0   
     # IMPORTANT: Ensure there is NO 'build' section here.
 
 volumes:
   # This declares the volume so the override file can use it
   postgres_catalog:
   postgres_basket:
-    
+  keycloak_data:  
