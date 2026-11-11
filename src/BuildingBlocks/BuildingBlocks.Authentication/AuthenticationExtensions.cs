@@ -59,7 +59,7 @@ public static class AuthenticationExtensions
                         }
 
                         // ToList(): materialize before we modify the identity's claims
-                        var normalized = normalizer.Normalize(principal);
+                        var normalized = normalizer.Normalize(principal).ToList();
                         if (!normalized.Any(c => c.Type == EshopClaimTypes.UserId))
                         {
                             ctx.Fail("Token has no user id claim.");

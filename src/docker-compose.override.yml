@@ -81,11 +81,16 @@ services:
       - MessageBroker__Host=amqp://ecommerce-mq:5672
       - MessageBroker__UserName=guest
       - MessageBroker__Password=guest
+      - Authentication__Provider=Keycloak
+      - Authentication__Authority=http://keycloak:8080/realms/eshop
+      - Authentication__Audience=eshop-api
+      - Authentication__RequireHttpsMetadata=false
     depends_on:
       - basketdb
       - distributedcache
       - discount.grpc
       - messagebroker
+      - keycloak
     ports:
       - "6001:8080"
       - "6061:8081"

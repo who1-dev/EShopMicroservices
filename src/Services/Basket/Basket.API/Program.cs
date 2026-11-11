@@ -54,6 +54,7 @@ builder.Services.AddMessageBroker(builder.Configuration);
 
 //Cross-Cutting Services
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+builder.Services.AddEshopAuthentication(builder.Configuration);
 
 builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration.GetConnectionString("Database")!)
@@ -62,8 +63,10 @@ builder.Services.AddHealthChecks()
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.MapCarter();
 app.UseExceptionHandler(options => { });
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapCarter(); 
 app.UseHealthChecks("/health",
     new HealthCheckOptions
     {
