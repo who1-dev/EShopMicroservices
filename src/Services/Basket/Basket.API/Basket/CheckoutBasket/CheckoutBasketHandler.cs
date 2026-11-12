@@ -19,7 +19,7 @@ public class CheckoutBasketCommandValidator
     }
 }
 
-public class CheckoutBasketCommandHandler
+public class CheckoutBasketHandler
     (IBasketRepository repository, IPublishEndpoint publishEndpoint)
     : ICommandHandler<CheckoutBasketCommand, CheckoutBasketResult>
 {
