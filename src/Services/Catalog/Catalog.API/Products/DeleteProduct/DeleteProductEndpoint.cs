@@ -2,7 +2,7 @@
 
 public record DeleteProductResponse(bool IsSuccess);
 
-public class DeleteProductEndpoint: ICarterModule
+public class DeleteProductEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -13,8 +13,11 @@ public class DeleteProductEndpoint: ICarterModule
 
             return Results.Ok(response);
         })
+            .RequireAuthorization(EshopPolicies.Admin)
             .WithName("DeleteProduct")
             .Produces<DeleteProductResponse>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .WithSummary("Delete Product")
             .WithDescription("Delete Product");

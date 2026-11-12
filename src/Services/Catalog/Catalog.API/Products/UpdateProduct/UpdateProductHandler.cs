@@ -3,9 +3,9 @@
 public record UpdateProductCommand(Guid Id, string Name, List<string> Category, string Description, string ImageFile, decimal Price) : ICommand<UpdateProductResult>;
 public record UpdateProductResult(bool IsSuccess);
 
-public class UpdateProductCommandHandler: AbstractValidator<UpdateProductCommand>
+public class UpdateProductCommandValidator: AbstractValidator<UpdateProductCommand>
 {
-    public UpdateProductCommandHandler()
+    public UpdateProductCommandValidator()
     {
         RuleFor(x => x.Id).NotEmpty().WithMessage("Product ID is required");
         RuleFor(x => x.Name)
