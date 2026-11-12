@@ -9,12 +9,7 @@ public class CheckoutBasketEndpoints : ICarterModule
     {
         app.MapPost("/basket/checkout", async (CheckoutBasketRequest request, ClaimsPrincipal user, ISender sender) =>
         {
-            request.BasketCheckoutDto.UserName = user.GetUserId();
-            request.BasketCheckoutDto.CustomerId = user.GetUserGuid();
-
-
-            var command = request.Adapt<CheckoutBasketCommand>();
-
+            var command = new CheckoutBasketCommand(request.BasketCheckoutDto, user.GetUserId(), user.GetUserGuid());
             var result = await sender.Send(command);
 
             var response = result.Adapt<CheckoutBasketResponse>();
@@ -23,7 +18,7 @@ public class CheckoutBasketEndpoints : ICarterModule
         })
         .RequireAuthorization(EshopPolicies.Authenticated)
         .WithName("CheckoutBasket")
-        .Produces<CheckoutBasketResponse>(StatusCodes.Status201Created)
+        .Produces<CheckoutBasketResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Checkout Basket")
         .WithDescription("Checkout Basket");

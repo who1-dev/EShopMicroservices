@@ -4,7 +4,7 @@ using Discount.Grpc;
 
 namespace Basket.API.Baskets.StoreBasket;
 
-public record StoreBasketCommand(ShoppingCart Cart) : ICommand<StoreBasketResult>;
+public record StoreBasketCommand(ShoppingCart Cart, string UserId) : ICommand<StoreBasketResult>;
 public record StoreBasketResult(string UserName);
 
 
@@ -13,7 +13,7 @@ public class StoreBasketCommandValidator: AbstractValidator<StoreBasketCommand>
     public StoreBasketCommandValidator()
     {
         RuleFor(x => x.Cart).NotNull().WithMessage("Cart can not be null");
-        RuleFor(x => x.Cart.UserName).NotEmpty().WithMessage("UserName is required");
+        RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId is required");
     }
 }
 
@@ -22,6 +22,8 @@ public class StoreBasketCommmandHandler(IBasketRepository repository, DiscountPr
 {
     public async Task<StoreBasketResult> Handle(StoreBasketCommand command, CancellationToken cancellationToken)
     {
+        command.Cart.UserName = command.UserId;
+
         await DeductDiscount(command.Cart, cancellationToken);
 
         await repository.StoreBasket(command.Cart, cancellationToken);

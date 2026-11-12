@@ -9,14 +9,12 @@ public class StoreBasketEndpoint : ICarterModule
     {
         app.MapPost("/basket", async (StoreBasketRequest request, ClaimsPrincipal user, ISender sender) =>
         {
-            request.Cart.UserName = user.GetUserId();
-
-            var command = request.Adapt<StoreBasketCommand>();
+            var command = new StoreBasketCommand(request.Cart, user.GetUserId());
             var result = await sender.Send(command);
 
             var response = result.Adapt<StoreBasketResponse>();
 
-            return Results.Created($"/basket", response);
+            return Results.Created("/basket", response);
         })
             .RequireAuthorization(EshopPolicies.Authenticated)
             .WithName("StoreBasket")
