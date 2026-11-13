@@ -6,10 +6,20 @@ internal class CreateOrderHandler(IApplicationDbContext dbContext)
 {
     public async Task<CreateOrderResult> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
     {
-        var order = CreateNewOrder(command.Order);
+        var dto = command.Order;
+        var customerId = CustomerId.Of(dto.CustomerId);
+
+        // First order from this Keycloak user → create the Customer from the checkout details
+        if (!await dbContext.Customers.AnyAsync(c => c.Id == customerId, cancellationToken))
+        {
+            var name = $"{dto.ShippingAddress.FirstName} {dto.ShippingAddress.LastName}";
+            dbContext.Customers.Add(Customer.Create(customerId, name, dto.ShippingAddress.EmailAddress));
+        }
+
+        var order = CreateNewOrder(dto);
 
         dbContext.Orders.Add(order);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);   // customer + order in one transaction
 
         return new CreateOrderResult(order.Id.Value);
     }

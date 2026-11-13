@@ -10,18 +10,18 @@ public class GetOrdersByCustomer : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/orders/customer/{customerId}", async (Guid customerId, ISender sender) =>
+        app.MapGet("/orders/me", async (ClaimsPrincipal user, ISender sender) =>
         {
-            var result = await sender.Send(new GetOrdersByCustomerQuery(customerId));
+            var result = await sender.Send(new GetOrdersByCustomerQuery(user.GetUserGuid()));
 
             var response = result.Adapt<GetOrdersByCustomerResponse>();
 
             return Results.Ok(response);
         })
             .WithName("GetOrdersByCustomer")
+            .RequireAuthorization(EshopPolicies.Authenticated)
             .Produces<GetOrdersByCustomerResponse>(StatusCodes.Status200OK)
-            .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .WithSummary("Get Orders By Customer")
             .WithDescription("Get Orders By Customer");
 

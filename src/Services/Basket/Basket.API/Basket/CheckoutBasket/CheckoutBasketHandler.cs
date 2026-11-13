@@ -16,6 +16,15 @@ public class CheckoutBasketCommandValidator
         RuleFor(x => x.BasketCheckoutDto).NotNull().WithMessage("BasketCheckoutDto can't be null");
         RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId is required");
         RuleFor(x => x.CustomerId).NotEmpty().WithMessage("CustomerId is required");
+
+        // Validate before the basket is deleted: if Ordering rejected these later in the
+        // consumer, the user would lose the basket and get no order and no error
+        When(x => x.BasketCheckoutDto is not null, () =>
+        {
+            RuleFor(x => x.BasketCheckoutDto.FirstName).NotEmpty().WithMessage("FirstName is required");
+            RuleFor(x => x.BasketCheckoutDto.LastName).NotEmpty().WithMessage("LastName is required");
+            RuleFor(x => x.BasketCheckoutDto.EmailAddress).NotEmpty().EmailAddress();
+        });
     }
 }
 

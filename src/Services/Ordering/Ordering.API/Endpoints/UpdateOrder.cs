@@ -24,8 +24,10 @@ public class UpdateOrder : ICarterModule
             return Results.Ok(response);
         })
         .WithName("UpdateOrder")
+        .RequireAuthorization(EshopPolicies.Admin)
         .Produces<UpdateOrderResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status403Forbidden)
         .WithSummary("Update Order")
         .WithDescription("Update Order");
     }

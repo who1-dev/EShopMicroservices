@@ -22,8 +22,10 @@ public class CreateOrder : ICarterModule
             return Results.Created($"/orders/{response.Id}", response);
         })
         .WithName("CreateOrder")
+        .RequireAuthorization(EshopPolicies.Admin)
         .Produces<CreateOrderResponse>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status403Forbidden)
         .WithSummary("Create Order")
         .WithDescription("Create Order");
     }

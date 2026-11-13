@@ -17,8 +17,10 @@ public class GetOrdersByName : ICarterModule
             return Results.Ok(response);
         })
         .WithName("GetOrdersByName")
+        .RequireAuthorization(EshopPolicies.Admin)
         .Produces<GetOrdersByNameResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status403Forbidden)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Get Orders By Name")
         .WithDescription("Get Orders By Name");
