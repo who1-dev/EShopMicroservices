@@ -416,3 +416,7 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Private study notes and the real (non-demo) Keycloak export
+docs/auth-design-notes.md
+src/keycloak/*.local.json
