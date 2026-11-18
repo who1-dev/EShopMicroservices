@@ -20,7 +20,8 @@ public class BasketCheckoutEventHandler
     {
         // Create full order with incoming event data
         var addressDto = new AddressDto(message.FirstName, message.LastName, message.EmailAddress, message.AddressLine, message.Country, message.State, message.ZipCode);
-        var paymentDto = new PaymentDto(message.CardName, message.CardNumber, message.Expiration, message.CVV, message.PaymentMethod);
+        // Shared enum from BuildingBlocks.Contracts; CreateOrderCommandValidator rejects unknown values
+        var paymentDto = new PaymentDto(message.PaymentMethod);
         var orderId = Guid.NewGuid();
 
         var orderDto = new OrderDto(

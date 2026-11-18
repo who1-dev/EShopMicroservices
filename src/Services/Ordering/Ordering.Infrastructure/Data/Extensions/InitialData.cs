@@ -1,4 +1,6 @@
-﻿namespace Ordering.Infrastructure.Data.Extensions;
+﻿using BuildingBlocks.Contracts.Enums;
+
+namespace Ordering.Infrastructure.Data.Extensions;
 internal class InitialData
 {
     public static IEnumerable<Customer> Customers =>
@@ -25,8 +27,8 @@ internal class InitialData
             var address1 = Address.Of("charmander", "fire", "charmander00000@gmail.com", "Fire Street", "Magma", "Volcano Land", "38050");
             var address2 = Address.Of("bulbasaur", "plant", "bulbasaur00000@gmail.com", "Plant Stree", "Garden", "Hanging Garden", "08050");
 
-            var payment1 = Payment.Of("charmander", "5555555555554444", "12/28", "355", 1);
-            var payment2 = Payment.Of("bulbasaur", "8885555555554444", "06/30", "222", 2);
+            var payment1 = Payment.Of(PaymentMethod.CreditCard, "SIM-seed00000001");
+            var payment2 = Payment.Of(PaymentMethod.DebitCard, "SIM-seed00000002");
 
             var order1 = Order.Create(
                             OrderId.Of(Guid.NewGuid()),

@@ -1,32 +1,30 @@
-﻿namespace Ordering.Domain.ValueObjects;
+﻿using BuildingBlocks.Contracts.Enums;
+
+namespace Ordering.Domain.ValueObjects;
+
+// No card data is stored (PCI DSS): only the payment method and the payment provider's reference.
 public record Payment
 {
-    public string? CardName { get; } = default!;
-    public string CardNumber { get; } = default!;
-    public string Expiration { get; } = default!;
-    public string CVV { get; } = default!;
-    public int PaymentMethod { get; } = default!;
+    public PaymentMethod PaymentMethod { get; } = default!;
+    public string Reference { get; } = default!;
 
     protected Payment()
     {
     }
 
-    private Payment(string cardName, string cardNumber, string expiration, string cvv, int paymentMethod)
+    private Payment(PaymentMethod paymentMethod, string reference)
     {
-        CardName = cardName;
-        CardNumber = cardNumber;
-        Expiration = expiration;
-        CVV = cvv;
         PaymentMethod = paymentMethod;
+        Reference = reference;
     }
 
-    public static Payment Of(string cardName, string cardNumber, string expiration, string cvv, int paymentMethod)
+    public static Payment Of(PaymentMethod paymentMethod, string reference)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(cardName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(cardNumber);
-        ArgumentException.ThrowIfNullOrWhiteSpace(cvv);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(cvv.Length, 3);
+        if (!Enum.IsDefined(paymentMethod))
+            throw new ArgumentOutOfRangeException(nameof(paymentMethod), paymentMethod, "Unknown payment method");
+        ArgumentException.ThrowIfNullOrWhiteSpace(reference);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(reference.Length, 64);
 
-        return new Payment(cardName, cardNumber, expiration, cvv, paymentMethod);
+        return new Payment(paymentMethod, reference);
     }
 }

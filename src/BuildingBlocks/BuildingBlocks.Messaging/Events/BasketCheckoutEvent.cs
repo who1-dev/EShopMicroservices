@@ -1,4 +1,6 @@
-﻿namespace BuildingBlocks.Messaging.Events;
+﻿using BuildingBlocks.Contracts.Enums;
+
+namespace BuildingBlocks.Messaging.Events;
 public record BasketCheckoutEvent : IntegrationEvent
 {
     public string UserName { get; set; } = default!;
@@ -14,10 +16,6 @@ public record BasketCheckoutEvent : IntegrationEvent
     public string State { get; set; } = default!;
     public string ZipCode { get; set; } = default!;
 
-    // Payment
-    public string CardName { get; set; } = default!;
-    public string CardNumber { get; set; } = default!;
-    public string Expiration { get; set; } = default!;
-    public string CVV { get; set; } = default!;
-    public int PaymentMethod { get; set; } = default!;
+    // Payment: only the method. Card data never enters the system (no PAN/CVV storage, PCI DSS)
+    public PaymentMethod PaymentMethod { get; set; } = default!;
 }

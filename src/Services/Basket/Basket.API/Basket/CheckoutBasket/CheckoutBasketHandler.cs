@@ -24,6 +24,7 @@ public class CheckoutBasketCommandValidator
             RuleFor(x => x.BasketCheckoutDto.FirstName).NotEmpty().WithMessage("FirstName is required");
             RuleFor(x => x.BasketCheckoutDto.LastName).NotEmpty().WithMessage("LastName is required");
             RuleFor(x => x.BasketCheckoutDto.EmailAddress).NotEmpty().EmailAddress();
+            RuleFor(x => x.BasketCheckoutDto.PaymentMethod).IsInEnum().WithMessage("PaymentMethod must be 1 (CreditCard), 2 (DebitCard), 3 (PayPal) or 4 (CashOnDelivery)");
         });
     }
 }

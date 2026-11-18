@@ -35,7 +35,8 @@ internal class CreateOrderHandler(IApplicationDbContext dbContext)
                 orderName: OrderName.Of(orderDto.OrderName),
                 shippingAddress: shippingAddress,
                 billingAddress: billingAddress,
-                payment: Payment.Of(orderDto.Payment.CardName, orderDto.Payment.CardNumber, orderDto.Payment.Expiration, orderDto.Payment.Cvv, orderDto.Payment.PaymentMethod)
+                // No real payment provider: the reference is generated here, never taken from the client
+                payment: Payment.Of(orderDto.Payment.PaymentMethod, NewSimulatedReference())
                 );
 
         foreach (var orderItemDto in orderDto.OrderItems)
@@ -44,4 +45,7 @@ internal class CreateOrderHandler(IApplicationDbContext dbContext)
         }
         return newOrder;
     }
+
+    // e.g. SIM-3f9c2a7b1d4e (a real provider would return its own id here, like Stripe's pi_...)
+    private static string NewSimulatedReference() => $"SIM-{Guid.NewGuid():N}"[..16];
 }
