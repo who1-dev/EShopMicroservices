@@ -17,6 +17,9 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 
+// Without this, ValidationBehavior receives no validators and every command passes unchecked
+builder.Services.AddValidatorsFromAssembly(assembly);
+
 //Data Services
 builder.Services.AddMarten(opts =>
 {

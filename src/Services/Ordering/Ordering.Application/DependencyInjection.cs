@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Behaviors;
 using BuildingBlocks.Messaging.MassTransit;
+using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
@@ -17,6 +18,9 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(ValidationBehavior<,>));
             config.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
+
+        // Without this, ValidationBehavior receives no validators and every command passes unchecked
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddFeatureManagement();
         services.AddMessageBroker(configuration, Assembly.GetExecutingAssembly());
