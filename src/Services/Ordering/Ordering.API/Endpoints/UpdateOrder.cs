@@ -3,7 +3,7 @@ using Ordering.Application.Orders.Commands.UpdateOrder;
 
 namespace Ordering.API.Endpoints;
 
-public record UpdateRecordRequest(OrderDto Order);
+public record UpdateOrderRequest(OrderDto Order);
 
 public record UpdateOrderResponse(bool IsSuccess);
 
@@ -12,10 +12,10 @@ public class UpdateOrder : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPut("/orders/{orderId}", async (UpdateRecordRequest request, ISender sender) =>
+        // :guid → a non-GUID id gives 404 instead of a binding error
+        app.MapPut("/orders/{orderId:guid}", async (Guid orderId, UpdateOrderRequest request, ISender sender) =>
         {
-
-            var command = request.Adapt<UpdateOrderCommand>();
+            var command = new UpdateOrderCommand(orderId, request.Order);
 
             var result = await sender.Send(command);
 
@@ -28,6 +28,7 @@ public class UpdateOrder : ICarterModule
         .Produces<UpdateOrderResponse>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .ProducesProblem(StatusCodes.Status403Forbidden)
+        .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Update Order")
         .WithDescription("Update Order");
     }
